@@ -14,27 +14,24 @@ export const TodolistAPI = {
         return instance.get<TodolistType[]>('todo-lists')
     },
     createTodolists: (title: string) => {
-        return instance.post<CreateTodolistResponseType>('todo-lists', {title})
+        return instance.post<ResponseType< {item: TodolistType} >>('todo-lists', {title})
     },
     deleteTodolists: (todoId: string) => {
-        return instance.delete<DeleteUpdateTodolistResponseType>(`todo-lists/${todoId}`)
+        return instance.delete<ResponseType>(`todo-lists/${todoId}`)
     },
     updateTodolists: (todoId: string, title: string) => {
-        return instance.put<DeleteUpdateTodolistResponseType>(`todo-lists/${todoId}`, {title})
+        return instance.put<ResponseType>(`todo-lists/${todoId}`, {title})
     }
 }
 
 // type
-// Array<number> - дженерик, уточнили. Массив чего? Массив чисел. Индентична запись number[]
-type CreateTodolistResponseType = {
-    data: {
-        item: TodolistType
-    }
+// Added Generic type
+type ResponseType<T = {}> = { // T = {} - Generic parameter defaults.
+    data: T
     messages: string[]
     fieldsErrors: string[]
     resultCode: number
 }
-
 
 type TodolistType = {
     id: string
@@ -43,11 +40,4 @@ type TodolistType = {
     title: string
 }
 
-// создали один тип и для Delete и для Update, т.к. у низ приходит одного типа Response
-type DeleteUpdateTodolistResponseType = {
-    data: {}
-    fieldsErrors: string[]
-    messages: string[]
-    resultCode: number
-}
 
