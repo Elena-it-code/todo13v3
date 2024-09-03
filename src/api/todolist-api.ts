@@ -8,17 +8,46 @@ const instance = axios.create({
     },
 })
 
+
 export const TodolistAPI = {
     getTodolists: () => {
-        return instance.get('todo-lists')
+        return instance.get<TodolistType[]>('todo-lists')
     },
     createTodolists: (title: string) => {
-        return instance.post('todo-lists', {title})
+        return instance.post<CreateTodolistResponseType>('todo-lists', {title})
     },
     deleteTodolists: (todoId: string) => {
-        return instance.delete(`todo-lists/${todoId}`)
+        return instance.delete<DeleteUpdateTodolistResponseType>(`todo-lists/${todoId}`)
     },
     updateTodolists: (todoId: string, title: string) => {
-        return instance.put(`todo-lists/${todoId}`, {title})
+        return instance.put<DeleteUpdateTodolistResponseType>(`todo-lists/${todoId}`, {title})
     }
 }
+
+// type
+// Array<number> - дженерик, уточнили. Массив чего? Массив чисел. Индентична запись number[]
+type CreateTodolistResponseType = {
+    data: {
+        item: TodolistType
+    }
+    messages: string[]
+    fieldsErrors: string[]
+    resultCode: number
+}
+
+
+type TodolistType = {
+    id: string
+    addedDate: Date // либо можно написать string
+    order: number
+    title: string
+}
+
+// создали один тип и для Delete и для Update, т.к. у низ приходит одного типа Response
+type DeleteUpdateTodolistResponseType = {
+    data: {}
+    fieldsErrors: string[]
+    messages: string[]
+    resultCode: number
+}
+
